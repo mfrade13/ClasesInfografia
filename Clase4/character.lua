@@ -1,4 +1,4 @@
-module(..., package.seeall)
+module(..., package.seeall) -- paquete necesario para exportar la clase
 
 
 local character = {}
@@ -13,12 +13,12 @@ function new_character(params)
  	character.jumpX = character.x
  	character.jumpY = character.y
 
- 	function rechargeBlink(  )
+ 	function rechargeBlink( )
  		character.canBlink = true
  	end
 
  	function fadeIn(  )
- 		transition.to(character, {alpha=1,time = 1000, onComplete=rechargeBlink })
+ 		transition.to(character, {alpha=1,time = 500, onComplete=rechargeBlink })
  		move()
  	end
  	function move( )
