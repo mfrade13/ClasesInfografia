@@ -13,26 +13,27 @@ function new_character(params)
  	character.jumpX = character.x
  	character.jumpY = character.y
 
- 	function rechargeBlink( )
+ 	function rechargeBlink()
  		character.canBlink = true
  	end
 
- 	function fadeIn(  )
+ 	function fadeIn(   )
  		transition.to(character, {alpha=1,time = 500, onComplete=rechargeBlink })
- 		move()
+ 		character:move()
  	end
- 	function move( )
+ 	function character:move( )
  		character.x, character.y = character.jumpX, character.jumpY
  	end
 
- 	function fadeOut(   )
+ 	function character:fadeOut(   )
  		character.canBlink = false
- 		transition.to(character, {alpha = 0, time = 1000, onComplete= fadeIn})
+ 		transition.to(self, {alpha = 0, time = 1000 })
+ 		transition.to( self, {delay = 1000, onComplete=fadeIn } )
  	end
 
  	function character:blink( event )
  		if character.canBlink then
- 			fadeOut()
+ 			self:fadeOut()
  			self.jumpX = event.x
  			self.jumpY = event.y
 	 	end
