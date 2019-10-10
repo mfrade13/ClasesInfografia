@@ -90,7 +90,7 @@ function moverPendulo( )
 		anguloHorero=180
 	end
 
-	print(anguloMinutero)
+	--print(anguloMinutero)
 	minutero.rotation=anguloMinutero
 	horero.rotation=anguloHorero
 	pendulo.rotation= angulo
