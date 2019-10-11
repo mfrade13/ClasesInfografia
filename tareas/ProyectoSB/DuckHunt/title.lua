@@ -16,8 +16,7 @@ local background
 local function onBackgroundTouch( self, event )
 	if event.phase == "ended" or event.phase == "cancelled" then
 		-- go to page1.lua scene
-		composer.gotoScene( "page1", "slideLeft", 800 )
-		
+		composer.gotoScene( "page1", "slideLeft", 500 )
 		return true	-- indicates successful touch
 	end
 end
@@ -63,6 +62,7 @@ function scene:show( event )
 		
 		background.touch = onBackgroundTouch
 		background:addEventListener( "touch", background )
+		
 	end
 end
 
