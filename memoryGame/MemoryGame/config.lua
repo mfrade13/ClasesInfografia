@@ -1,5 +1,5 @@
 --
--- For more information on config.lua see the Project Configuration Guide at:
+-- For more information on config.lua see the Corona SDK Project Configuration Guide at:
 -- https://docs.coronalabs.com/guide/basics/configSettings
 --
 
@@ -9,8 +9,8 @@ application =
 	{
 		width = 320,
 		height = 480, 
-		scale = "letterbox",
-		fps = 60,
+		scale = "letterBox",
+		fps = 30,
 		
 		--[[
 		imageSuffix =
