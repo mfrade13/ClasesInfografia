@@ -78,11 +78,13 @@ function moverPendulo( )
 	end
 
 	if(anguloMinutero>535) then
-		bird.isVisible = true
 		anguloMinutero=180
 	end
 
-	if(anguloMinutero>187) then
+
+	if(anguloMinutero>522) then
+		bird.isVisible = true
+	elseif (anguloMinutero>187) then
 		bird.isVisible = false
 	end
 
@@ -90,7 +92,7 @@ function moverPendulo( )
 		anguloHorero=180
 	end
 
-	--print(anguloMinutero)
+	print(anguloMinutero)
 	minutero.rotation=anguloMinutero
 	horero.rotation=anguloHorero
 	pendulo.rotation= angulo
@@ -100,7 +102,7 @@ function moverPendulo( )
 
 end
 
-local l= timer.performWithDelay( 50, moverPendulo,-1)
+local l= timer.performWithDelay( 500, moverPendulo,-1)
 
 function startClock()
 --	timer.performWithDelay( 1000, moverPendulo,-1)
