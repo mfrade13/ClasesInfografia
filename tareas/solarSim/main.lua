@@ -14,6 +14,7 @@ local planet = require('planet')
 local background = display.newImage("thisisnotapi.jpg", _CW, _CH)
 local trail = false
 local pause = true
+local trail_size = 100
 
 sun = display.newCircle( _CW, _CH, 44)
 mercury = planet.newPlanet({
@@ -181,6 +182,9 @@ function updateMoon( self )
 	end
 	if self.state == 2 then
 		self.trail_list:insert( display.newCircle(self.x, self.y, 2) )
+		if self.trail_list.numChildren > trail_size then
+			self.trail_list:remove(1)
+		end
 	end
 	self.t = self.t + math.pi * self.rate
 	self.x = self.r * math.cos(self.t) + earth.x
@@ -193,6 +197,9 @@ function udpateEuropa( self )
 	end
 	if self.state == 2 then
 		self.trail_list:insert( display.newCircle(self.x, self.y, 2) )
+		if self.trail_list.numChildren > trail_size then
+			self.trail_list:remove(1)
+		end
 	end
 	self.t = self.t + math.pi * self.rate
 	self.x = self.r * math.cos(self.t) + jupiter.x
@@ -205,6 +212,9 @@ function updateTitan( self )
 	end
 	if self.state == 2 then
 		self.trail_list:insert( display.newCircle(self.x, self.y, 2) )
+		if self.trail_list.numChildren > trail_size then
+			self.trail_list:remove(1)
+		end
 	end
 	self.t = self.t + math.pi * self.rate
 	self.x = self.r * math.cos(self.t) + saturn.x
@@ -217,6 +227,9 @@ function updateElliptical( self )
 	end
 	if self.state == 2 then
 		self.trail_list:insert( display.newCircle(self.x, self.y, 2) )
+		if self.trail_list.numChildren > trail_size then
+			self.trail_list:remove(1)
+		end
 	end
 	local d = ((self.x - _CW) ^ 2 + (self.y - _CH) ^ 2) ^ 0.5
 	if self.min_dist > d then
