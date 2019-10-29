@@ -56,7 +56,7 @@ function scene:create( event )
 	local middle=display.newLine(300,0,300,800)
 	middle.strokeWidth = 8
 	-- create a grass object and add physics (with custom shape)
-	local bottomMargin = display.newImageRect( "grass.png", screenW, 40 )
+	local bottomMargin = display.newImageRect( "brickWall.jpg", screenW, 40 )
 	bottomMargin.anchorX = 0
 	bottomMargin.anchorY = 1
 	--  draw the grass at the very bottom of the screen
@@ -68,7 +68,7 @@ function scene:create( event )
 	physics.addBody(bottomMargin, "static", { friction=0.3, shape=marginShape} )
 
 	
-	local topMargin = display.newImageRect( "grass.png", screenW, 40 )
+	local topMargin = display.newImageRect( "brickWall.jpg", screenW, 40 )
 	topMargin.anchorX = 0
 	topMargin.anchorY = 1
 	--  draw the grass at the very bottom of the screen
@@ -80,7 +80,7 @@ function scene:create( event )
 	
 	--MARGIN
 
-	local rightMarginT = display.newImageRect( "neonLight.png", 40, 300 )
+	local rightMarginT = display.newImageRect( "brickWall.jpg", 40, 300 )
 	rightMarginT.anchorX = 0
 	rightMarginT.anchorY = 1
 	--  draw the grass at the very bottom of the screen
@@ -90,7 +90,7 @@ function scene:create( event )
 	local marginShape = { -25,-150, -25,150, 25, 150,25,-150 }
 	physics.addBody(rightMarginT, "static", { friction=0.3, shape=marginShape} )
 	
-	local rightMarginB = display.newImageRect( "neonLight.png", 40, 300 )
+	local rightMarginB = display.newImageRect( "brickWall.jpg", 40, 300 )
 	rightMarginB.anchorX = 0
 	rightMarginB.anchorY = 1
 	--  draw the grass at the very bottom of the screen
@@ -100,7 +100,7 @@ function scene:create( event )
 	local marginShape = { -25,-150, -25,150, 25, 150,25,-150 }
 	physics.addBody(rightMarginB, "static", { friction=0.3, shape=marginShape} )
 	
-	local leftMarginT = display.newImageRect( "neonLight.png", 30, 300 )
+	local leftMarginT = display.newImageRect( "brickWall.jpg", 30, 300 )
 	leftMarginT.anchorX = 0
 	leftMarginT.anchorY = 1
 	--  draw the grass at the very bottom of the screen
@@ -110,7 +110,7 @@ function scene:create( event )
 	local marginShape = { -25,-150, -25,150, 25, 150,25,-150 }
 	physics.addBody(leftMarginT, "static", { friction=0.3, shape=marginShape} )
 	
-	local leftMarginB = display.newImageRect( "neonLight.png", 30, 300 )
+	local leftMarginB = display.newImageRect( "brickWall.jpg", 30, 300 )
 	leftMarginB.anchorX = 0
 	leftMarginB.anchorY = 1
 	--  draw the grass at the very bottom of the screen
