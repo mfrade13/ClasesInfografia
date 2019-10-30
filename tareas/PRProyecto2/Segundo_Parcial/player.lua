@@ -1,7 +1,6 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local widget = require( "widget" )
-
 --------------------------------------------
 
 local background
@@ -34,7 +33,7 @@ function scene:create( event )
 	local sceneGroup = self.view
 
 	-- display a background image
-	background = display.newImageRect( sceneGroup, "arcade1.jpg", display.contentWidth+100, display.contentHeight )
+	background = display.newImageRect( sceneGroup, "arcade2.jpg", display.contentWidth+100, display.contentHeight )
 	--background.anchorX = 0.5
 	--background.anchorY = 0.5
 	background.x, background.y = display.screenOriginX+display.contentCenterX+50, display.contentCenterY
