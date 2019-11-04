@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------
 --
--- level1.lua
+-- level2.lua
 --
 -----------------------------------------------------------------------------------------
 local composer = require("composer")
@@ -11,93 +11,22 @@ local physics = require "physics"
 local widget = require("widget")
 
 --------------------------------------------
-
--- paredes externas
-local alto = {249, 525, 525, 525, 525}
-local bajo = {237, 513, 237, 237, 513}
-local derecha = {320, 195, 7, 320, 320}
-local izquierda = {1, 1, 1, 313, 219}
-
-local s1 = {1, -249, 320, -249,320, -237,1, -237}
-local shapes = {
-    {
-        izquierda[1], -alto[1], derecha[1], -alto[1], derecha[1], -bajo[1],
-        izquierda[1], -bajo[1]
-    }, {
-        izquierda[2], -alto[2], derecha[2], -alto[2], derecha[2], -bajo[2],
-        izquierda[2], -bajo[2]
-    }, {
-        izquierda[3], -alto[3], derecha[3], -alto[3], derecha[3], -bajo[3],
-        izquierda[3], -bajo[3]
-    }, {
-        izquierda[4], -alto[4], derecha[4], -alto[4], derecha[4], -bajo[4],
-        izquierda[4], -bajo[4]
-    }, {
-        izquierda[5], -alto[5], derecha[5], -alto[5], derecha[5], -bajo[5],
-        izquierda[5], -bajo[5]
-    }
-}
-
--- bloques
-local blockHeights = {
-    489, 489, 441, 441, 393, 296, 297, 297, 297, 297, 297, 346, 393, 525,
-    525
-}
-local blockDowns = {
-    465, 465, 417, 417, 369, 273, 273, 273, 273, 273, 273, 321, 321, 417,
-    417
-}
-local blockLefts = {
-    31, 78, 31, 78, 78, 31, 78, 125, 172, 219, 266, 219, 125, 125, 219
-}
-local blocksRights = {
-    55, 101, 55, 101, 101, 55, 101, 148, 195, 242, 289, 242, 195, 195, 289
-}
-
--- eles
-local barsHeights = {393, 345, 393, 393}
-local barsDowns = {321, 321, 369, 321}
-local barsLefts = {31, 31, 219, 266}
-local barsRights = {55, 102, 289, 289}
-
-local blocks = {}
-local bars = {}
-
-for i = 1, 15 do
-    blocks[i] = {
-        blockLefts[i], -blockHeights[i], blocksRights[i], -blockHeights[i],
-        blocksRights[i], -blockDowns[i], blockLefts[i], -blockDowns[i]
-    }
-end
-
-for i = 1, 4 do
-    bars[i] = {
-        barsLefts[i], -barsHeights[i], barsRights[i], -barsHeights[i],
-        barsRights[i], -barsDowns[i], barsLefts[i], -barsDowns[i]
-    }
-end
-
--- 'onRelease' event listener for btnGanar
-local function onbtnGanarRelease()
-
-    composer.gotoScene("level2", "fade", 500)
-
-    return true -- indicates successful touch
-end
-
-local ganar = display.newCircle(207, 30, 10)
-
 local bomberman = display.newImageRect("bomberman_front_1.png", 18, 20)
-bomberman.x, bomberman.y = 20, 25
+bomberman.x, bomberman.y = 19, 25
 
-local enemy1Radio = 10
+local ganar = display.newCircle(19, 70, 10)
+
 local enemy1Side = true -- true -> down; false -> up
-local enemy1 = display.newCircle(113, 25, enemy1Radio)
-enemy1.fill = {type = "image", filename = "enemy1_1.png"}
+local enemy1 = display.newImageRect("enemy2_1.png", 13, 18)
+enemy1.x, enemy1.y = 114, 25
 
 local enemy2Side = true -- true -> right; false -> left
-local enemy2 = display.newImageRect("enemy1_2_d.png", 30, 15)
+local enemy2 = display.newImageRect("enemy2_2.png", 17, 18)
 enemy2.x, enemy2.y = 145, 264
+
+local enemy3Side = true -- true -> down; false -> up
+local enemy3 = display.newImageRect("enemy2_1.png", 13, 18)
+enemy3.x, enemy3.y = 114, 264
 
 local pressingR = false
 local pressingL = false
@@ -109,11 +38,18 @@ local frameL = 1
 local frameU = 1
 local frameD = 1
 
+local function onbtnGanarRelease()
+
+    composer.gotoScene("menu", "fade", 500)
+    return true
+end
+
 function moveEnemy1()
     local y = enemy1.y
-    local move = 1
+    local move = 3
     if enemy1Side then
-        if y + move < 264 then
+        if y + move < 138 then
+        -- if y + move < 538 then
             enemy1.y = y + move
         else
             enemy1Side = false
@@ -137,7 +73,6 @@ function moveEnemy2()
             enemy2.x = x + move
         else
             enemy2Side = false
-            enemy2.fill = {type = "image", filename = "enemy1_2_i.png"}
             enemy2.x = x - move
         end
     else
@@ -145,8 +80,27 @@ function moveEnemy2()
             enemy2.x = x - move
         else
             enemy2Side = true
-            enemy2.fill = {type = "image", filename = "enemy1_2_d.png"}
             enemy2.x = x + move
+        end
+    end
+end
+
+function moveEnemy3()
+    local y = enemy3.y
+    local move = 3
+    if enemy3Side then
+        if y + move < 264 then
+            enemy3.y = y + move
+        else
+            enemy3Side = false
+            enemy3.y = y - move
+        end
+    else
+        if y - move > 155 then
+            enemy3.y = y - move
+        else
+            enemy3Side = true
+            enemy3.y = y + move
         end
     end
 end
@@ -156,26 +110,17 @@ function moveControlRight()
     local x = bomberman.x
     local move = 1
     if pressingR then
-        bomberman.x = x + move
-        -- control de la animacion
-        if frameR == 1 then
-            bomberman.fill = {
-                type = "image",
-                filename = "bomberman_right_2.png"
-            }
-            frameR = 2
-        elseif frameR == 2 then
-            frameR = 1
-            bomberman.fill = {
-                type = "image",
-                filename = "bomberman_right_3.png"
-            }
-        else
-            bomberman.fill = {
-                type = "image",
-                filename = "bomberman_right_1.png"
-            }
-        end
+		bomberman.x = x + move
+		-- control de la animacion
+		if frameR == 1 then
+			bomberman.fill = {type = "image", filename = "bomberman_right_2.png"}
+			frameR = 2
+		elseif frameR == 2 then
+			frameR = 1
+			bomberman.fill = {type = "image", filename = "bomberman_right_3.png"}
+		else
+			bomberman.fill = { type = "image", filename = "bomberman_right_1.png" }
+		end
     end
 end
 
@@ -185,16 +130,16 @@ function moveControlLeft()
     local move = 1
     if pressingL then
         bomberman.x = x - move
-        -- control de la animacion
-        if frameL == 1 then
-            bomberman.fill = {type = "image", filename = "bomberman_left_2.png"}
-            frameL = 2
-        elseif frameL == 2 then
-            frameL = 1
-            bomberman.fill = {type = "image", filename = "bomberman_left_3.png"}
-        else
-            bomberman.fill = {type = "image", filename = "bomberman_left_1.png"}
-        end
+		-- control de la animacion
+		if frameL == 1 then
+			bomberman.fill = {type = "image", filename = "bomberman_left_2.png"}
+			frameL = 2
+		elseif frameL == 2 then
+			frameL = 1
+			bomberman.fill = {type = "image", filename = "bomberman_left_3.png"}
+		else
+			bomberman.fill = { type = "image", filename = "bomberman_left_1.png" }
+		end
     end
 end
 
@@ -205,15 +150,15 @@ function moveControlUp()
     if pressingU then
         bomberman.y = y - move
         -- control de la animacion
-        if frameU == 1 then
-            bomberman.fill = {type = "image", filename = "bomberman_back_2.png"}
-            frameU = 2
-        elseif frameU == 2 then
-            frameU = 1
-            bomberman.fill = {type = "image", filename = "bomberman_back_3.png"}
-        else
-            bomberman.fill = {type = "image", filename = "bomberman_back_1.png"}
-        end
+		if frameU == 1 then
+			bomberman.fill = {type = "image", filename = "bomberman_back_2.png"}
+			frameU = 2
+		elseif frameU == 2 then
+			frameU = 1
+			bomberman.fill = {type = "image", filename = "bomberman_back_3.png"}
+		else
+			bomberman.fill = { type = "image", filename = "bomberman_back_1.png" }
+		end
     end
 end
 
@@ -224,36 +169,26 @@ function moveControlDown()
     if pressingD then
         bomberman.y = y + move
         -- control de la animacion
-        if frameD == 1 then
-            bomberman.fill = {
-                type = "image",
-                filename = "bomberman_front_2.png"
-            }
-            frameD = 2
-        elseif frameD == 2 then
-            frameD = 1
-            bomberman.fill = {
-                type = "image",
-                filename = "bomberman_front_3.png"
-            }
-        else
-            bomberman.fill = {
-                type = "image",
-                filename = "bomberman_front_1.png"
-            }
-        end
+		if frameD == 1 then
+			bomberman.fill = {type = "image", filename = "bomberman_front_2.png"}
+			frameD = 2
+		elseif frameD == 2 then
+			frameD = 1
+			bomberman.fill = {type = "image", filename = "bomberman_front_3.png"}
+		else
+			bomberman.fill = { type = "image", filename = "bomberman_front_1.png" }
+		end
     end
 end
 
 function scene:create(event)
 
     local sceneGroup = self.view
-
     physics.stop()
     physics.start()
     physics.pause()
 
-    local background = display.newImageRect("clear_map_1.png", 320, 288)
+    local background = display.newImageRect("clear_map_2.png", 320, 288)
     background.anchorX = 0
     background.anchorY = 0
 
@@ -268,15 +203,58 @@ function scene:create(event)
     backgroundControl.anchorY = 0
     backgroundControl.x, backgroundControl.y = 0, 300
 
+    -- paredes externas
+    local alto = {249, 525, 525, 525, 525}
+    local bajo = {237, 513, 237, 237, 513}
+    local derecha = {320, 253, 7, 320, 320}
+    local izquierda = {1, 1, 1, 313, 303}
+
+    local shapes = {
+        {
+            izquierda[1], -alto[1], derecha[1], -alto[1], derecha[1], -bajo[1],
+            izquierda[1], -bajo[1]
+        }, {
+            izquierda[2], -alto[2], derecha[2], -alto[2], derecha[2], -bajo[2],
+            izquierda[2], -bajo[2]
+        }, {
+            izquierda[3], -alto[3], derecha[3], -alto[3], derecha[3], -bajo[3],
+            izquierda[3], -bajo[3]
+        }, {
+            izquierda[4], -alto[4], derecha[4], -alto[4], derecha[4], -bajo[4],
+            izquierda[4], -bajo[4]
+        }, {
+            izquierda[5], -alto[5], derecha[5], -alto[5], derecha[5], -bajo[5],
+            izquierda[5], -bajo[5]
+        }
+    }
+
+    -- bloques
+    local blockHeights = {
+        489, 489, 441, 441, 441, 441, 393, 393, 393, 393, 344, 344, 344, 344,
+        296, 296, 296, 296, 513, 413, 317, 513, 513 
+    }
+    local blockDowns = {
+        465, 465, 417, 417, 417, 417, 369, 369, 369, 369, 320, 320, 320, 320,
+        273, 273, 273, 273, 445, 348, 249, 465, 465
+    }
+    local blockLefts = {
+        126, 173, 126, 172, 221, 268, 126, 172, 221, 268, 126, 172, 221, 268, 
+        126, 172, 221, 268, 31, 31, 31, 221, 303
+    }
+    local blocksRights = {
+        148, 195, 148, 195, 242, 290, 148, 195, 242, 290, 148, 195, 242, 290, 
+        148, 195, 242, 290, 102, 102, 102, 253, 313
+    }
+
     -- controles
-    function pressL()
-        pressingL = true
-        frameL = math.random(1, 2)
-    end
-    function releaseL()
-        pressingL = false
-        frameL = 3
-    end
+	function pressL() 
+		pressingL = true 
+		frameL = math.random(1, 2)
+	end
+	function releaseL() 
+		pressingL = false 
+		frameL = 3
+	end
     local buttonLeft = widget.newButton({
         width = 40,
         height = 40,
@@ -286,8 +264,8 @@ function scene:create(event)
         onRelease = releaseL,
         x = 45,
         y = 415
-    })
-    local buttonLeft2 = widget.newButton({
+	})
+	local buttonLeft2 = widget.newButton({
         width = 40,
         height = 40,
         label = "  ",
@@ -296,46 +274,45 @@ function scene:create(event)
         onRelease = releaseL,
         x = 200,
         y = 415
-    })
-    
+	})
+
     function pressR()
-        pressingR = true
-        frameR = math.random(1, 2)
+		pressingR = true
+		frameR = math.random(1, 2)
     end
     function releaseR()
-        pressingR = false
-        frameR = 3
+		pressingR = false
+		frameR = 3
     end
-    local buttonRight = widget.newButton(
-                            {
-            width = 40,
-            height = 40,
-            label = "  ",
-            fontSize = 30,
-            onPress = pressR,
-            onRelease = releaseR,
-            x = 115,
-            y = 415
-        })
-    local buttonRight2 = widget.newButton(
-                            {
+    local buttonRight = widget.newButton({
         width = 40,
         height = 40,
-        label = "  ",
-        fontSize = 30,
-        onPress = pressR,
-        onRelease = releaseR,
-        x = 270,
-        y = 415
-    })
-    
-    function pressU()
-        pressingU = true
-        frameU = math.random(1, 2)
+		label = "  ",
+		fontSize = 30,
+		onPress = pressR,
+		onRelease = releaseR,
+		x = 115,
+		y = 415
+	})
+	local buttonRight2 = widget.newButton({
+        width = 40,
+        height = 40,
+		label = "  ",
+		fontSize = 30,
+		onPress = pressR,
+		onRelease = releaseR,
+		x = 270,
+		y = 415
+	})
+	
+	function pressU()
+		pressingU = true
+		frameU = math.random(1, 2)
+		print("u")
     end
     function releaseU()
-        pressingU = false
-        frameU = 3
+		pressingU = false
+		frameU = 3
     end
     local buttonUp = widget.newButton({
         width = 40,
@@ -343,28 +320,28 @@ function scene:create(event)
         label = "  ",
         fontSize = 30,
         onPress = pressU,
-        onRelease = releaseU,
+		onRelease = releaseU,
         x = 80,
         y = 370
-    })
-    local buttonUp = widget.newButton({
+	})
+	local buttonUp = widget.newButton({
         width = 40,
         height = 40,
         label = "  ",
         fontSize = 30,
         onPress = pressU,
-        onRelease = releaseU,
+		onRelease = releaseU,
         x = 235,
         y = 370
-    })
+	})
 
-    function pressD()
-        pressingD = true
-        frameD = math.random(1, 2)
+	function pressD()
+		pressingD = true
+		frameD = math.random(1, 2)
     end
     function releaseD()
-        pressingD = false
-        frameD = 3
+		pressingD = false
+		frameD = 3
     end
     local buttonDown = widget.newButton({
         width = 40,
@@ -372,20 +349,30 @@ function scene:create(event)
         label = "  ",
         fontSize = 30,
         onPress = pressD,
-        onRelease = releaseD,
+		onRelease = releaseD,
         x = 80,
         y = 455
-    })
-    local buttonDown2 = widget.newButton({
+	})
+	local buttonDown2 = widget.newButton({
         width = 40,
         height = 40,
         label = "  ",
         fontSize = 30,
         onPress = pressD,
-        onRelease = releaseD,
+		onRelease = releaseD,
         x = 235,
         y = 455
     })
+
+    -- posiciones
+    local blocks = {}
+
+    for i = 1, 23 do
+        blocks[i] = {
+            blockLefts[i], -blockHeights[i], blocksRights[i], -blockHeights[i],
+            blocksRights[i], -blockDowns[i], blockLefts[i], -blockDowns[i]
+        }
+    end
 
     physics.addBody(grass, "static", 
         {friction = 0.3, shape = shapes[1]},
@@ -408,21 +395,25 @@ function scene:create(event)
         {friction = 0.3, shape = blocks[13]},
         {friction = 0.3, shape = blocks[14]},
         {friction = 0.3, shape = blocks[15]},
-        {friction = 0.3, shape = bars[1]},
-        {friction = 0.3, shape = bars[2]},
-        {friction = 0.3, shape = bars[3]},
-        {friction = 0.3, shape = bars[4]}
+        {friction = 0.3, shape = blocks[16]},
+        {friction = 0.3, shape = blocks[17]},
+        {friction = 0.3, shape = blocks[18]},
+        {friction = 0.3, shape = blocks[19]},
+        {friction = 0.3, shape = blocks[20]},
+        {friction = 0.3, shape = blocks[21]},
+        {friction = 0.3, shape = blocks[22]},
+        {friction = 0.3, shape = blocks[23]}
     )
 
     -- hero
     physics.addBody(bomberman, {density = 3.0, friction = 0.0})
 
     -- enemies
-    physics.addBody(enemy1, {radius = enemy1Radio},
-                    {density = 3.0, friction = 0.0})
-    physics.addBody(enemy2, {density = 3.0, friction = 0.0})
+    physics.addBody(enemy1, {density = 3.0, friction = 0.3})
+    physics.addBody(enemy2, {density = 3.0, friction = 0.3})
+    physics.addBody(enemy3, {density = 3.0, friction = 0.3})
+    physics.addBody(ganar, {density = 3.0, friction = 1.0})
 
-    physics.addBody(ganar, {density = 3.0, friction = 0.0})
     -- names
     bomberman.name = "Bomberman"
     bomberman.isFixedRotation = true
@@ -433,6 +424,9 @@ function scene:create(event)
     enemy2.name = "Enemy2"
     enemy2.isFixedRotation = true
     enemy2.angularVelocity = 0
+    enemy3.name = "Enemy3"
+    enemy3.isFixedRotation = true
+    enemy3.angularVelocity = 0
     grass.name = "Wall"
     ganar.name = "Ganar"
 
@@ -440,6 +434,7 @@ function scene:create(event)
     sceneGroup:insert(background)
     sceneGroup:insert(enemy1)
     sceneGroup:insert(enemy2)
+    sceneGroup:insert(enemy3)
     sceneGroup:insert(bomberman)
     sceneGroup:insert(grass)
     sceneGroup:insert(backgroundControl)
@@ -447,57 +442,53 @@ function scene:create(event)
 
 end
 
+
+
 function scene:show(event)
     local sceneGroup = self.view
     local phase = event.phase
 
     if phase == "will" then
-
         -- Called when the scene is still off screen and is about to move on screen
     elseif phase == "did" then
         -- Called when the scene is now on screen
         function choque(self, event)
-            print(event.phase)
 
             if (event.phase == "began") then
-                print(self.name .. " choca " .. event.other.name)
+                print(self.name .. ": collision began with " .. event.other.name)
                 if event.other.name == "Enemy1" then
                     transition.to(bomberman, {time = 1, x = 20, y = 25})
                     print('Cambio')
-                elseif event.other.name == "Enemy2" then
-                    transition.to(bomberman, {time = 1, x = 20, y = 25})
-                    print('Cambio2')
+                -- elseif event.other.name == "Enemy2" then
+                --     transition.to(bomberman, {time = 1, x = 20, y = 25})
+                --     print('Cambio2')
+                -- elseif event.other.name == "Enemy3" then
+                --     transition.to(bomberman, {time = 1, x = 20, y = 25})
+                --     print('Cambio3')
                 elseif event.other.name == "Ganar" then
                     print("Entra")
                     -- composer.gotoScene( "level2", "fade", 500 )
                     timer.performWithDelay(1000, onbtnGanarRelease, 1)
                     print('Cambio3')
                 end
+
             elseif (event.phase == "ended") then
                 
-                    -- elseif event.other.name == "Ganar" then
-                    --     print("Entra")
-                    --     composer.gotoScene( "level2", "fade", 500 )
-                    --     print('Cambio3')
-                -- end
             end
         end
-        
         -- INSERT code here to make the scene come alive
         -- e.g. start timers, begin animation, play audio, etc.
         -- local backgroundMusic = audio.loadStream( "theme.mp3" )
         -- local backgroundMusicChannel = audio.play( backgroundMusic, { channel = 1, loops = -1 } )
-        timer.performWithDelay(10, moveEnemy1, -1)
+        timer.performWithDelay(50, moveEnemy1, -1)
         timer.performWithDelay(10, moveEnemy2, -1)
+        timer.performWithDelay(50, moveEnemy3, -1)
         timer.performWithDelay(1, moveControlRight, -1)
-        timer.performWithDelay(1, moveControlLeft, -1)
-        timer.performWithDelay(1, moveControlUp, -1)
-        timer.performWithDelay(1, moveControlDown, -1)
+		timer.performWithDelay(1, moveControlLeft, -1)
+		timer.performWithDelay(1, moveControlUp, -1)
+		timer.performWithDelay(1, moveControlDown, -1)
 
         bomberman.collision = choque
-        bomberman:addEventListener("collision", bomberman)
-
-        -- bomberman.collision = fganar
         bomberman:addEventListener("collision", bomberman)
 
         physics.setDrawMode("hybrid")
@@ -521,6 +512,7 @@ function scene:hide(event)
         -- Called when the scene is now off screen
         physics.pause()
     end
+
 end
 
 function scene:destroy(event)
@@ -529,10 +521,8 @@ function scene:destroy(event)
     -- 
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc.
-
     local sceneGroup = self.view
-    -- physics.stop()
-    
+
     package.loaded[physics] = nil
     physics = nil
 
@@ -540,7 +530,6 @@ function scene:destroy(event)
         ganar:removeSelf() -- widgets must be manually removed
         ganar = nil
     end
-
 end
 
 ---------------------------------------------------------------------------------

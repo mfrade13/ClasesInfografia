@@ -3,12 +3,12 @@
 -- menu.lua
 --
 -----------------------------------------------------------------------------------------
-
-local composer = require( "composer" )
+local composer = require("composer")
 local scene = composer.newScene()
 
 -- include Corona's "widget" library
-local widget = require "widget"
+local physics = require "physics"
+local widget = require("widget")
 
 --------------------------------------------
 
@@ -26,6 +26,9 @@ end
 
 function scene:create( event )
 	local sceneGroup = self.view
+	physics.stop()
+	physics.start()
+	physics.pause()
 
 	-- Called when the scene's view does not exist.
 	-- 
@@ -33,32 +36,32 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	-- display a background image
-	local background = display.newImageRect( "background.jpg", display.actualContentWidth, display.actualContentHeight )
+	local background = display.newImageRect( "main_menu_1_small.png", display.actualContentWidth, display.actualContentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x = 0 + display.screenOriginX 
 	background.y = 0 + display.screenOriginY
 	
 	-- create/position logo/title image on upper-half of the screen
-	local titleLogo = display.newImageRect( "logo.png", 264, 42 )
-	titleLogo.x = display.contentCenterX
-	titleLogo.y = 100
+	-- local titleLogo = display.newImageRect( "logo.png", 264, 42 )
+	-- titleLogo.x = display.contentCenterX
+	-- titleLogo.y = 100
 	
 	-- create a widget button (which will loads level1.lua on release)
 	playBtn = widget.newButton{
-		label="Play Now",
+		label="",
 		labelColor = { default={255}, over={128} },
-		default="button.png",
+		-- default="button.png",
 		over="button-over.png",
-		width=154, height=40,
+		width=320, height=65,
 		onRelease = onPlayBtnRelease	-- event listener function
 	}
 	playBtn.x = display.contentCenterX
-	playBtn.y = display.contentHeight - 125
+	playBtn.y = 130
 	
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )
-	sceneGroup:insert( titleLogo )
+	-- sceneGroup:insert( titleLogo )
 	sceneGroup:insert( playBtn )
 end
 
@@ -73,6 +76,7 @@ function scene:show( event )
 		-- 
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
+		physics.start()
 	end	
 end
 
@@ -87,6 +91,7 @@ function scene:hide( event )
 		-- e.g. stop timers, stop animation, unload sounds, etc.)
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
+		physics.pause()
 	end	
 end
 
@@ -98,6 +103,9 @@ function scene:destroy( event )
 	-- INSERT code here to cleanup the scene
 	-- e.g. remove display objects, remove touch listeners, save state, etc.
 	
+	package.loaded[physics] = nil
+    physics = nil
+
 	if playBtn then
 		playBtn:removeSelf()	-- widgets must be manually removed
 		playBtn = nil
