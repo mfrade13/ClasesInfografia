@@ -459,12 +459,12 @@ function scene:show(event)
                 if event.other.name == "Enemy1" then
                     transition.to(bomberman, {time = 1, x = 20, y = 25})
                     print('Cambio')
-                -- elseif event.other.name == "Enemy2" then
-                --     transition.to(bomberman, {time = 1, x = 20, y = 25})
-                --     print('Cambio2')
-                -- elseif event.other.name == "Enemy3" then
-                --     transition.to(bomberman, {time = 1, x = 20, y = 25})
-                --     print('Cambio3')
+                elseif event.other.name == "Enemy2" then
+                    transition.to(bomberman, {time = 1, x = 20, y = 25})
+                    print('Cambio2')
+                elseif event.other.name == "Enemy3" then
+                    transition.to(bomberman, {time = 1, x = 20, y = 25})
+                    print('Cambio3')
                 elseif event.other.name == "Ganar" then
                     print("Entra")
                     -- composer.gotoScene( "level2", "fade", 500 )
