@@ -30,6 +30,7 @@ physics.setDrawMode( "hybrid" )
 local background = display.newImageRect("calles-background-grande.png",_W,_H)
 background.anchorX = 0
 background.anchorY = 0
+--physics.addBody( background, "static", {isSensor=true, friction=0.5 ,shape={-_W/2,-_H/2, _W/2,-_H/2, -_W/2,_H/2, _W/2,_H/2}} )
 
 local top = display.newRect( _W/2, 2, _W, 2 )
 physics.addBody(top, "static", {shape={-_W/2,-1, _W/2,-1, -_W/2,1, _W/2,1}})
@@ -44,7 +45,7 @@ top.name, bottom.name, izquierda.name, derecha.name = "wall","wall","wall","wall
 
 local cuadraShape = {-55,-55, 55,-55, 55,55, -55,55}
 local cuadra1 = display.newPolygon(55,58,cuadraShape)
-physics.addBody( cuadra1, "static",{shape=cuadraShape, isSensor=true} )
+physics.addBody( cuadra1, "static",{shape=cuadraShape, isSensor=true, friction=0.9} )
 local cuadra2 = display.newPolygon(240,58,cuadraShape)
 physics.addBody( cuadra2, "static",{shape=cuadraShape, isSensor=true} )
 local cuadra3 = display.newPolygon(_W-55,58,cuadraShape)
@@ -112,19 +113,40 @@ local autos = {}
 
 
 --no olvidar: isVisible = false, width y height (20, 40) depende la direccion
+local xi, yi, xd, yd = 30, _H/2+13, _W-30, _H/2-15
+local x1a, y1a, x1ab, y1ab, x2a, y2a, x2ab, y2ab = _W/3-23, 25 ,_W/3-2, _H-25, 2*_W/3+3, 25, 2*_W/3+24, _H-25
 local attAutos = {
-	{img="auto1i.png", x=_W-30, y=_H/2-15, name="auto",direccion="izq",vx=-70,vy=0},
-	{img="auto2a.png", x=_W/3-2, y=_H-20, name="auto",direccion="arr",vx=0,vy=-70},
-	{img="auto2i.png", x=_W-30, y=_H/2-15, name="auto",direccion="izq",vx=-40,vy=0},
-	{img="auto4a.png", x=2*_W/3+24, y=_H-20, name="auto",direccion="arr",vx=0,vy=-40},
-	{img="auto3d.png", x=30, y=_H/2+13, name="auto",direccion="der",vx=70,vy=0},
-	{img="auto5a.png", x=_W/3-2, y=_H-20, name="auto",direccion="arr",vx=0,vy=-30},
-	{img="auto5i.png", x=_W-30, y=_H/2-15, name="auto",direccion="izq",vx=-70,vy=0},
-	{img="auto4a.png", x=2*_W/3+24, y=_H-20, name="auto",direccion="arr",vx=0,vy=-50},
-	{img="auto6d.png", x=30, y=_H/2+13, name="auto",direccion="der",vx=70,vy=0},
-	{img="auto1ab.png", x=2*_W/3+3, y=20, name="auto",direccion="aba",vx=0,vy=50}
+	{img="spritesheet_auto1i.jpg", x=xd, y=yd, name="auto",direccion="izq",vx=-80,vy=0},
+	{img="spritesheet_auto2d.jpg", x=xi, y=yi, name="auto",direccion="der",vx=70,vy=0},
+	{img="spritesheet_auto3a.jpg", x=x1ab, y=y1ab, name="auto",direccion="arr",vx=0,vy=-70},
+	{img="spritesheet_auto4a.jpg", x=x2ab, y=y2ab, name="auto",direccion="arr",vx=0,vy=-60},
+	{img="spritesheet_auto5ab.jpg", x=x1a, y=y1a, name="auto",direccion="aba",vx=0,vy=70},
+	{img="spritesheet_auto6ab.jpg", x=x2a, y=y2a, name="auto",direccion="aba",vx=0,vy=50},
+	{img="spritesheet_auto2i.jpg", x=xd, y=yd, name="auto",direccion="izq",vx=-50,vy=0},
+	{img="spritesheet_auto3d.jpg", x=xi, y=yi, name="auto",direccion="der",vx=50,vy=0},
+	{img="spritesheet_auto4a.jpg", x=x1ab, y=y1ab, name="auto",direccion="arr",vx=0,vy=-60},
+	{img="spritesheet_auto5a.jpg", x=x2ab, y=y2ab, name="auto",direccion="arr",vx=0,vy=-60},
+	{img="spritesheet_auto6ab.jpg", x=x1a, y=y1a, name="auto",direccion="aba",vx=0,vy=50},
+	{img="spritesheet_auto1ab.jpg", x=x2a, y=y2a, name="auto",direccion="aba",vx=0,vy=40},
+	{img="spritesheet_auto3i.jpg", x=xd, y=yd, name="auto",direccion="izq",vx=-70,vy=0},
+	{img="spritesheet_auto4d.jpg", x=xi, y=yi, name="auto",direccion="der",vx=55,vy=0},
+	{img="spritesheet_auto5a.jpg", x=x1ab, y=y1ab, name="auto",direccion="arr",vx=0,vy=-45},
+	{img="spritesheet_auto6a.jpg", x=x2ab, y=y2ab, name="auto",direccion="arr",vx=0,vy=-55},
+	{img="spritesheet_auto1ab.jpg", x=x1a, y=y1a, name="auto",direccion="aba",vx=0,vy=65},
+	{img="spritesheet_auto2ab.jpg", x=x2a, y=y2a, name="auto",direccion="aba",vx=0,vy=40},
+	{img="spritesheet_auto4i.jpg", x=xd, y=yd, name="auto",direccion="izq",vx=-50,vy=0},
+	{img="spritesheet_auto5d.jpg", x=xi, y=yi, name="auto",direccion="der",vx=70,vy=0},
+	{img="spritesheet_auto6a.jpg", x=x1ab, y=y1ab, name="auto",direccion="arr",vx=0,vy=-30},
+	{img="spritesheet_auto1a.jpg", x=x2ab, y=y2ab, name="auto",direccion="arr",vx=0,vy=-60},
+	{img="spritesheet_auto2ab.jpg", x=x1a, y=y1a, name="auto",direccion="aba",vx=0,vy=70},
+	{img="spritesheet_auto3ab.jpg", x=x2a, y=y2a, name="auto",direccion="aba",vx=0,vy=50},
+	{img="spritesheet_auto5i.jpg", x=xd, y=yd, name="auto",direccion="izq",vx=-45,vy=0},
+	{img="spritesheet_auto6d.jpg", x=xi, y=yi, name="auto",direccion="der",vx=60,vy=0},
+	{img="spritesheet_auto1a.jpg", x=x1ab, y=y1ab, name="auto",direccion="arr",vx=0,vy=-40},
+	{img="spritesheet_auto2a.jpg", x=x2ab, y=y2ab, name="auto",direccion="arr",vx=0,vy=-30},
+	{img="spritesheet_auto3ab.jpg", x=x1a, y=y1a, name="auto",direccion="aba",vx=0,vy=40},
+	{img="spritesheet_auto4ab.jpg", x=x2a, y=y2a, name="auto",direccion="aba",vx=0,vy=50}
 }
-
 
 
 
@@ -266,9 +288,12 @@ function choqueX(self, event)
 		elseif self.direccion == "der" and (event.other.name == "pasoZebra1" or event.other.name == "pasoZebra3") then
 			self.inCollision = true
 			print("collision true")
-		elseif event.other.name == "auto" then
-			--self.inCollision = true
-		elseif event.other.name == "wall" then
+		elseif event.other.name == "auto" and event.other.isVisible then
+			self.inCollision = true
+			self.finish = true
+			self:setFrame( 2 )
+			event.other:setFrame( 2 )
+		elseif event.other.name == "wall" and event.other.y >= 115 and event.other.y <= _H-115 then
 			self.isVisible = false
 			self.isSensor = true
 			self.inCollision = true
@@ -282,7 +307,7 @@ function choqueX(self, event)
 	end
 end
 
-
+	
 
 function moverEnXP(autox, i)
 	--autox:applyLinearImpulse( -0.03, 0, autox.x, autox.y )
@@ -323,88 +348,130 @@ function identificarAccionY( )
 	return ac
 end
 
+function choqueY(self, event)
+	local phase = event.phase
+		--print("collision can jump state", crate.canJump)
 
-function moverEnYP(autoy)
-	print("Se mueve")
+	if phase == "began" then
+		--print("Yo " .. self.name  ..  " me estoy chocando con " .. event.other.name )
+		if self.direccion == "arr" and (event.other.name == "pasoZebra6" or event.other.name == "pasoZebra8") then
+			self.inCollision = true
+			print("collision true")
+		elseif self.direccion == "aba" and (event.other.name == "pasoZebra5" or event.other.name == "pasoZebra7") then
+			self.inCollision = true
+			print("collision true")
+		elseif event.other.name == "auto" and event.other.isVisible then
+			self.inCollision = true
+			self.finish = true
+			self:setFrame( 2 )
+			event.other:setFrame( 2 )
+		elseif event.other.name == "wall" and (event.other.x >= 115 and event.other.x <= 180 or event.other.x >= 200 and event.other.x <= 265) then
+			self.isVisible = false
+			self.isSensor = true
+			self.inCollision = true
+			self.finish = true
+			print( "collision wall" )
+		end
+
+	elseif phase == "ended" then
+		self.inCollision = false
+		print('me choque con '.. event.other.name)
+	end
+end
+
+
+function moverEnYP(autoy, i)
+	--print("Se mueve")
 	--autoy:applyLinearImpulse( 0, -0.03, autoy.x, autoy.y )
-	autoy:setLinearVelocity( 0,-80 )
+	--autoy:setLinearVelocity( 0,-80 )
+	if(autoy.inCollision) then
+		local accion = identificarAccionY()
+		if(accion == "detener") then
+			autoy:setLinearVelocity( 0, 0 )
+		elseif(accion == "frenar") then
+			autoy.linearDamping = 10
+		else
+			autoy:setLinearVelocity( attAutos[i].vx, attAutos[i].vy )
+			autoy.linearDamping = 0	
+			--print("Se mueve")
+		end
+	else
+		autoy:setLinearVelocity( attAutos[i].vx, attAutos[i].vy )
+		autoy.linearDamping = 0	
+		print("collision false")
+	end
+	
 end
 
 
 
 local tanda = 0
 function moverX( )
-	if (not autos[1].finish) then
-		autos[1].isSensor = false
-		autos[1].isVisible = true
-		moverEnXP(autos[1],1)
+	for i=1,tanda*6 do
+		local pos = i
+		if (not autos[pos].finish and (autos[pos].direccion == "der" or autos[pos].direccion == "izq")) then
+			autos[pos].isSensor = false
+			autos[pos].isVisible = true
+			moverEnXP(autos[pos],pos)
+		end
 	end
-
-	--auto1.isVisible = true
-	--moverEnX(auto1,2000,"izq")
-	--auto5.isVisible = true
-	--moverEnX(auto5,4000,"der")
-	--if(tanda >= 2) then
-	--	auto3.isVisible = true
-	--	moverEnX(auto3,4000,"izq")
-	--end
-	--if(tanda >= 3) then
-	--	auto7.isVisible = true
---		moverEnX(auto7,5000,"izq")
---		auto9.isVisible = true
---		moverEnX(auto9,5000,"der")
---	end
 end
 
 function moverY( )	
-	auto2.isVisible = true
-	auto4.isVisible = true
-	moverEnY(auto2,3500,"arr")
-	moverEnY(auto4,6000,"arr")
-	if(tanda >= 2) then
-		auto6.isVisible = true
-		auto10.isVisible = true
-		moverEnY(auto6,5000,"arr")
-		moverEnY(auto10,4000,"aba")
+	for i=1,tanda*6 do
+		local pos = i
+		print( tanda .. "*****************".. pos .."***************" )
+		if (not autos[pos].finish and (autos[pos].direccion == "arr" or autos[pos].direccion == "aba")) then
+			autos[pos].isSensor = false
+			autos[pos].isVisible = true
+			moverEnYP(autos[pos],pos)
+		end
 	end
-	if(tanda >= 3) then
-		auto8.isVisible = true
-		moverEnY(auto8,5000,"arr")
-	end
-	
 end
 
 function lanzarAutos( )
-	for i=1,10 do
-		local w = 40
-		local h = 20
-		local c = choqueX
-		if(attAutos[i].direccion == "arr" or attAutos[i].direccion == "aba") then
-			w = 20
-			h = 40
-			--c = choqueY
+	if (tanda+1)*6 <= #attAutos then
+		for i=6*tanda+1,#attAutos do
+			local w = 40
+			local h = 22
+			local c = choqueX
+			local autoShape = {-20,-10, 20,-10, -20,10, 20,10}
+			if(attAutos[i].direccion == "arr" or attAutos[i].direccion == "aba") then
+				w = 20
+				h = 39
+				c = choqueY
+				autoShape = {-10,-20, 10,-20, -10,20, 10,20}
+			end
+			--local autoSheet = graphics.newImageSheet( "spritesheet_auto2d.jpg", {width=40, height=22, numFrames=2} )
+			local autoSheet = graphics.newImageSheet( attAutos[i].img, {width=w, height=h, numFrames=2} )
+
+			--autos[i] = display.newImageRect(attAutos[i].img, w, h)
+			autos[i] = display.newSprite( autoSheet, {start=1, count=2, time=1000, loopCount=1} )
+			autos[i].x = attAutos[i].x
+			autos[i].y = attAutos[i].y
+			--autos[i].xScale = 0.2
+			--autos[i].yScale = 0.75
+			autos[i]:setFrame( 1 )
+			autos[i].completeName = attAutos[i].completeName
+			autos[i].name = attAutos[i].name
+			autos[i].direccion = attAutos[i].direccion
+			autos[i].inCollision = false
+			autos[i].isVisible = false
+			autos[i].finish = false
+			
+			--autoOutline = graphics.newOutline( 2, attAutos[i].img )
+			--physics.addBody( autos[i], "dynamic",{ outline=autoOutline, isSensor=true } )
+			physics.addBody(autos[i],"dynamic", {isSensor=true,shape=autoShape})
+			autos[i].collision = c
+			autos[i]:addEventListener( "collision", autos[i] )
+
+			autosGroup:insert(autos[i])
 		end
-		autos[i] = display.newImageRect(attAutos[i].img, w, h)
-		autos[i].x = attAutos[i].x
-		autos[i].y = attAutos[i].y
-		autos[i].name = attAutos[i].name
-		autos[i].direccion = attAutos[i].direccion
-		autos[i].inCollision = false
-		autos[i].isVisible = false
-		autos[i].finish = false
-		
-		autoOutline = graphics.newOutline( 2, attAutos[i].img )
-		physics.addBody( autos[i], "dynamic",{ outline=autoOutline, isSensor=true } )
-		autos[i].collision = c
-		autos[i]:addEventListener( "collision", autos[i] )
-
-		autosGroup:insert(autos[i])
+		timer.performWithDelay( 300, moverX,-1 )
+		timer.performWithDelay( 200, moverY,-1 )
+		--timer.performWithDelay( 200, moverY,-1 )
+		tanda = tanda+1
 	end
-	timer.performWithDelay( 300, moverX,-1 )
-	--timer.performWithDelay( 200, moverY,-1 )
-	--timer.performWithDelay( 200, moverY,-1 )
-	tanda = tanda+1
-
 end
 
 --funcion touch para el objeto background
@@ -415,7 +482,7 @@ local function onBackgroundTouch( event )
 		--timer.performWithDelay( 300, auto1:moverEnX(semaforo1,semaforo2,colorSH),-1 ) --pa clase
 		--timer.performWithDelay( 200, auto2:moverEnY(semaforo3,semaforo4,colorSV),-1 ) --pa clase
 		lanzarAutos()
-		--timer.performWithDelay( 10000, lanzarAutos, -1)
+		timer.performWithDelay( 10000, lanzarAutos, -1)
 		--background:removeEventListener( "touch", background )
 	end
 	return true
