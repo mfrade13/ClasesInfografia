@@ -41,7 +41,7 @@ circle:setFillColor( 1,0,0 )
 group:insert( 3, circle )
 group:insert( 1, kerrigan )
 group:insert( 2, magina  )
-group.isVisible = false
+group.isVisible = true
 
 --funcino touch para el objeto background
 function background:touch( event )
