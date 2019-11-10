@@ -1,0 +1,64 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Reconocimiento de Texto<br />
+    con TesseractJS
+  </h1>
+  <input type="file" (change)="onFileChanged($event)"><br />
+  <!-- <img [src]="this.link" width="50%" /> -->
+  <div class="p-3">
+    <output id="list"></output>
+  </div>
+  <button class="pd-3" *ngIf="this.mfile !== null" (click)="this.doOCR();">Analizar</button>
+  <div class="p-3" *ngIf="this.loading === true">
+    <p>
+      Analizando...
+    </p>
+    <div class="px-5">
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+          [ngStyle]="{'width': this.progress + '%', 'aria-valuenow': this.progress}"></div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="this.loading === false">
+    <h2>Resultado: </h2><br />
+    <div class="px-5">
+      <table>
+        <thead>
+          <tr>
+            <th>Cantidad de lineas</th>
+            <th>Texto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>{{ this.l }}</th>
+            <td>
+              <pre>{{ ocrResult }}</pre>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="p-5">
+      <table>
+        <thead>
+          <tr>
+            <th>Cantidad de repeticiones</th>
+            <th>Palabra</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of this.top">
+            <th>{{ item[1] }}</th>
+            <td>
+              <pre>{{ item[0] }}</pre>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
